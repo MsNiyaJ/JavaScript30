@@ -1,41 +1,28 @@
 //A key press event listener, e.key tells us whch key was pressed
 window.addEventListener('keypress', (e) => {
     let keyCharCode = e.key.toUpperCase().charCodeAt(0);    //Character code of the key that was pressed
+    let key = document.querySelector(`div[data-key="${keyCharCode}"]`);
+    let audio = document.querySelector(`audio[data-key="${keyCharCode}"]`);
     
-    if(keyExists(keyCharCode)){
-        let attribute = `[data-key="${keyCharCode}"]`;     //this attribute is found in each element we want to use
-        addPlayingClass(attribute);
-        playSound(attribute);
+    //if there is a div with that key code, add a new class and play a sound
+    if(key !== null){
+        addPlayingClass(key);
+        playSound(audio);
     }
 });
 
-//Checks if there is an existing div with a data-key that matches the char code of the pressed key
-function keyExists(keyCharCode){
-    let keyExists = false;
-    const keys = document.querySelectorAll('.key');     //node-list of every div with the class 'key'
-    
-    keys.forEach((key) => {
-        let dataKey = key.getAttribute('data-key');   //data-key value of the div
-
-        //If the key pressed matches the data-key of a div, return true
-        if(keyCharCode == dataKey) {
-            keyExists = true;
-            return;
-        }
-    });
-    return keyExists;
-}
-
 //Gives a div a class of 'playing'
-function addPlayingClass(attribute){
-    let key = document.querySelectorAll(attribute)[0];  //Selects the div that has a data-key that matches the key pressed key
+function addPlayingClass(key){
     key.classList.add('playing');
-    setTimeout(function(){ key.classList.remove('playing'); }, 300);    //removes the class after 0.3s
+ 
+    //event listener keeps track of when the 'playing' transition ends 
+    key.addEventListener('transitionend', (e) => {
+        if(e.propertyName === 'transform') 
+            key.classList.remove('playing');     //removes the class after the transition ends
+    });
 }
 
 //Plays sound that corresponds with the key pressed
-function playSound(attribute){
-    let audio = document.querySelectorAll(attribute)[1]; //Selects the audio that has a data-key that matches the pressed key
+function playSound(audio){
     audio.play();
-    // console.dir(audio);
 }
