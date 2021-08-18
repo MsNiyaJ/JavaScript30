@@ -2,7 +2,7 @@
 window.addEventListener('keypress', (e) => {
     let keyCharCode = e.key.toUpperCase().charCodeAt(0);    //Character code of the key that was pressed
     addPlayingClass(keyCharCode);
-    // playSound(keyCharCode);
+    playSound(keyCharCode);
 });
 
 //Gives a div a class of 'playing'
@@ -16,11 +16,18 @@ function addPlayingClass(keyCharCode){
         if(keyCharCode == dataKey) 
             key.classList.add('playing');
             
-        setTimeout(function(){ key.classList.remove('playing'); }, 100);    //removes the class after 0.1s
+        setTimeout(function(){ key.classList.remove('playing'); }, 300);    //removes the class after 0.3s
     });
 }
 
 //Plays sound that corresponds with the key pressed
 function playSound(keyCharCode){
+    let sounds = document.querySelectorAll('audio');     //node-list of every div with the tag 'audio'
+    sounds.forEach((sound) => {
+        let dataKey = sound.getAttribute('data-key');
 
+        //If the key pressed matches the data-key of the audio, play the sound
+        if(keyCharCode == dataKey)
+           sound.play();
+    });
 }
